@@ -1,0 +1,4 @@
+pyTelegramBotApi
+BeautifulSoup4
+Selenium
+Requests
