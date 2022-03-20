@@ -1,5 +1,3 @@
 pyTelegramBotApi
 BeautifulSoup4
 Requests
-time
-random
