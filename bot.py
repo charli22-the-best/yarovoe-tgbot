@@ -1,13 +1,16 @@
-from email import message
+from cgitb import html
 import telebot
+from telebot import types
 import requests
-import random
 from time import sleep
 from bs4 import BeautifulSoup
+import random
+from gc import callbacks
 from googletrans import Translator
 
 
-bot = telebot.TeleBot('5191273277:AAHyxVdMro_qXDyCAsm5PhL6riQVx7O_eHQ')
+bot = telebot.TeleBot('5262689983:AAEsqlFzbOt5ewwx9ibGl13lDG-6QxHEbYA')
+
 
 w = requests.get('https://rp5.ru/Погода_в_Яровом,_Алтайский_край')
 nphw = requests.get('https://prognoz3.ru/россия/алтайский-край/погода-в-яровом/почасовая')
@@ -18,11 +21,12 @@ bs2 = BeautifulSoup(nphw.content, "html.parser")
 
 # Начало
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'help'])
 def start(message):
     bot.send_message(message.chat.id,
-                     "Добро пожаловать!" + "\n" "Список всех команд: " + "\n" "/weather" + " - погода в текущее время" + "\n" "/password_generator" + " - генератор надёжных паролей")
+                     "Добро пожаловать!" + "\n" "Список всех команд: " + "\n" "/weather" + " - погода в текущее время" + "\n" + "\n" "/password_generator" + " - генератор надёжных паролей" + "\n" + "\n" "/translate" + " - переводчик")
 
+   
 
 # Погода
 
@@ -50,6 +54,7 @@ def weather(message):
 
 # Генератор_паролей
 
+
 @bot.message_handler(commands=['password_generator'])
 def password_generator(message):
     if message.chat.type == "group" or message.chat.type == "supergroup":
@@ -61,9 +66,12 @@ def password_generator(message):
 def answer_password_generator(message):
     pas = ''
     for x in range(int(f"{message.text}")): #Количество символов (16)
-        pas = pas + random.choice(list('1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ')) #Символы, из которых будет составлен пароль
+        pas = pas + random.choice(list('+-/*!&$#?=w@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')) #Символы, из которых будет составлен пароль
     bot.send_message(message.chat.id, "Ваш пароль:")
     bot.send_message(message.chat.id, pas)
+    bot.send_message(message.chat.id,  '>НИКОМУ НЕ СООБЩАЙТЕ ЕГО!')
+
+
 
 # Переводчик
 
@@ -71,12 +79,16 @@ translator = Translator()
 
 @bot.message_handler(commands="translate")
 def send_text(message):
-    markup = telebot.types.InlineKeyboardMarkup()
-    markup.add(telebot.types.InlineKeyboardButton(text='RU',callback_data=1))
-    markup.add(telebot.types.InlineKeyboardButton(text='EN ', callback_data=2))
-    markup.add(telebot.types.InlineKeyboardButton(text='DE ', callback_data=3))
+    if message.chat.type == "private":
+        markup = telebot.types.InlineKeyboardMarkup()
+        markup.add(telebot.types.InlineKeyboardButton(text='RU (Русский)',callback_data='RU'))
+        markup.add(telebot.types.InlineKeyboardButton(text='EN (English)', callback_data='EN'))
+        markup.add(telebot.types.InlineKeyboardButton(text='DE (Deutsch)', callback_data='DE'))
 
-    bot.send_message(message.chat.id, "Выбери язык на который хотите перевести текст.", reply_markup = markup)
+        bot.send_message(message.chat.id, "Выбери язык на который хотите перевести текст.", reply_markup = markup)
+
+    else: 
+        bot.reply_to(message, "На данный момент перевод в группах недоступен")
 
 def next_trans2(message):
     try:
@@ -108,40 +120,40 @@ def next_trans4(message):
         bot.send_message(message.chat.id, res.text)
 
 
+
 @bot.callback_query_handler(func=lambda call: True)
 def query_handler(call):
 
     bot.answer_callback_query(callback_query_id=call.id)
     answer = ''
-    if call.data == '1':
+    if call.data == 'RU':
         markup = telebot.types.InlineKeyboardMarkup()
-        markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data=4))
-        markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data=5))
+        markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data='menu'))
+        markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data='translate'))
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Введите текст для перевода", reply_markup = markup)
         bot.register_next_step_handler(msg, next_trans2)
-    elif call.data == '2':
+    elif call.data == 'EN':
         markup = telebot.types.InlineKeyboardMarkup()
-        markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data=4))
-        markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data=5))
+        markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data='menu'))
+        markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data='translate'))
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Введите текст для перевода", reply_markup = markup)
         bot.register_next_step_handler(msg, next_trans3)
-    elif call.data == '3':
+    elif call.data == 'DE':
         markup = telebot.types.InlineKeyboardMarkup()
-        markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data=4))
-        markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data=5))
+        markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data='menu'))
+        markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data='translate'))
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Введите текст для перевода", reply_markup = markup)
         bot.register_next_step_handler(msg, next_trans4)
-    elif call.data == '4':
+    elif call.data == 'menu':
         markup = telebot.types.InlineKeyboardMarkup()
-        markup.add(telebot.types.InlineKeyboardButton(text='RU',callback_data=1))
-        markup.add(telebot.types.InlineKeyboardButton(text='EN ', callback_data=2))
-        markup.add(telebot.types.InlineKeyboardButton(text='DE ', callback_data=3))
+        markup.add(telebot.types.InlineKeyboardButton(text='RU (Русский)',callback_data='RU'))
+        markup.add(telebot.types.InlineKeyboardButton(text='EN (English)', callback_data='EN'))
+        markup.add(telebot.types.InlineKeyboardButton(text='DE (Deutsch)', callback_data='DE'))
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Выбери язык на который хотите перевести текст.", reply_markup = markup)
-    elif call.data == '5':
+    elif call.data == 'translate':
         markup = telebot.types.InlineKeyboardMarkup()
-        markup.add(telebot.types.InlineKeyboardButton(text='Перевод', callback_data=4))
+        markup.add(telebot.types.InlineKeyboardButton(text='Перевод', callback_data='menu'))
         bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Вы вернулись в главное меню!", reply_markup = markup)
-      
 
 
 
