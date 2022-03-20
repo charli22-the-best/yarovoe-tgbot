@@ -36,7 +36,7 @@ def weather(message):
         bot.send_message(message.chat.id, 'Поиск данных...')
         sleep(1)
         weather_value = bs1.find('div', class_='ArchiveTemp').find('span', class_='t_0').text + " (Ощущается как " + bs1.find('div', class_='TempStr').find('span', class_='t_0').text + "), " + bs2.find("div", class_="b-weather_current_additional").find("span", class_="note").text.lower() + "\n"
-        pressure_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="pressure").text + " мм.рт.ст" + "\n"
+        pressure_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="pressure").text + ". рт.ст" + "\n"
         humidity_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="humidity").text + "\n"
         wind_speed_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="wind").text + "\n"
         long_sun = bs2.find("span", class_="b-weather_days_long").find("span", class_="sunrise").text + "\n" + bs2.find("span", class_="sunset").text
@@ -45,7 +45,7 @@ def weather(message):
         bot.reply_to(message, 'Поиск данных...')
         sleep(1)
         weather_value = bs1.find('div', class_='ArchiveTemp').find('span', class_='t_0').text + " (Ощущается как " + bs1.find('div', class_='TempStr').find('span', class_='t_0').text + "), " + bs2.find("div", class_="b-weather_current_additional").find("span", class_="note").text.lower() + "\n"
-        pressure_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="pressure").text + " мм.рт.ст" + "\n"
+        pressure_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="pressure").text + ". рт.ст" + "\n"
         humidity_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="humidity").text + "\n"
         wind_speed_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="wind").text + "\n"
         long_sun = bs2.find("span", class_="b-weather_days_long").find("span", class_="sunrise").text + "\n" + bs2.find("span", class_="sunset").text
