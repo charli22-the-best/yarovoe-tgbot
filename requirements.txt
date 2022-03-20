@@ -1,3 +1,4 @@
 pyTelegramBotApi
 BeautifulSoup4
 Requests
+googletrans==3.1.0a0
