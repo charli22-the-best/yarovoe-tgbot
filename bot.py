@@ -116,7 +116,15 @@ def next_trans4(message):
         text =  message.text
         lang = 'DE'
         res = translator.translate(text, dest=lang)
-        bot.send_message(message.chat.id, res.text)
+ef next_trans5(message):
+    try:
+        text = int(message.text)
+        bot.send_message(message.chat.id, "Это не текст!")
+    except:
+        text =  message.text
+        lang = 'UK'
+        res = translator.translate(text, dest=lang)
+        bot.send_message(message.chat.id, res.text)        bot.send_message(message.chat.id, res.text)
 
 
 
@@ -143,6 +151,12 @@ def query_handler(call):
         markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data='translate'))
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Введите текст для перевода", reply_markup = markup)
         bot.register_next_step_handler(msg, next_trans4)
+    elif call.data == 'UK':
+        markup = telebot.types.InlineKeyboardMarkup()
+        markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data='menu'))
+        markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data='translate'))
+        msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Введите текст для перевода", reply_markup = markup)
+        bot.register_next_step_handler(msg, next_trans5)
     elif call.data == 'menu':
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='RU (Русский)',callback_data='RU'))
