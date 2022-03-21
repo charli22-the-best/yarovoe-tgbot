@@ -80,17 +80,25 @@ translator = Translator()
 def send_text(message):
     if message.chat.type == "private":
         markup = telebot.types.InlineKeyboardMarkup()
-        markup.add(telebot.types.InlineKeyboardButton(text='RU (Русский)',callback_data='RU'))
-        markup.add(telebot.types.InlineKeyboardButton(text='EN (English)', callback_data='EN'))
-        markup.add(telebot.types.InlineKeyboardButton(text='DE (Deutsch)', callback_data='DE'))
-        markup.add(telebot.types.InlineKeyboardButton(text='UK (Український)', callback_data='UK'))
-        markup.add(telebot.types.InlineKeyboardButton(text='KK (қазақ)', callback_data='KK'))
-        markup.add(telebot.types.InlineKeyboardButton(text='ES (Español)', callback_data='ES'))
-        markup.add(telebot.types.InlineKeyboardButton(text='FR (Français)', callback_data='FR'))
-        markup.add(telebot.types.InlineKeyboardButton(text='IT (Italiano)', callback_data='IT'))
-        markup.add(telebot.types.InlineKeyboardButton(text='NI (Nederlands)', callback_data='NI'))
-        markup.add(telebot.types.InlineKeyboardButton(text='PL (Polski)', callback_data='PL'))
-        markup.add(telebot.types.InlineKeyboardButton(text='PT (Português)', callback_data='PT'))
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='RU (Русский)',callback_data='RU'),
+            telebot.types.InlineKeyboardButton(text='EN (English)', callback_data='EN'),
+            telebot.types.InlineKeyboardButton(text='DE (Deutsch)', callback_data='DE')
+        )
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='UK (Український)', callback_data='UK'),
+            telebot.types.InlineKeyboardButton(text='KK (қазақ)', callback_data='KK')
+        )
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='ES (Español)', callback_data='ES'),
+            telebot.types.InlineKeyboardButton(text='FR (Français)', callback_data='FR'),
+            telebot.types.InlineKeyboardButton(text='IT (Italiano)', callback_data='IT')
+        )
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='NL (Nederlands)', callback_data='NL'),
+            telebot.types.InlineKeyboardButton(text='PL (Polski)', callback_data='PL'),
+            telebot.types.InlineKeyboardButton(text='PT (Português)', callback_data='PT')
+        )
 
         bot.send_message(message.chat.id, "Выбери язык на который хотите перевести текст", reply_markup = markup)
 
@@ -170,13 +178,13 @@ def next_trans_it(message):
         lang = 'IT'
         res = translator.translate(text, dest=lang)
         bot.send_message(message.chat.id, res.text)
-def next_trans_ni(message):
+def next_trans_nl(message):
     try:
         text = int(message.text)
         bot.send_message(message.chat.id, "Это не текст!")
     except:
         text =  message.text
-        lang = 'NI'
+        lang = 'NL'
         res = translator.translate(text, dest=lang)
         bot.send_message(message.chat.id, res.text)
 def next_trans_pl(message):
@@ -251,12 +259,12 @@ def query_handler(call):
         markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data='translate'))
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Введите текст для перевода", reply_markup = markup)
         bot.register_next_step_handler(msg, next_trans_it)
-    elif call.data == 'NI':
+    elif call.data == 'NL':
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data='menu'))
         markup.add(telebot.types.InlineKeyboardButton(text='Отмена', callback_data='translate'))
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Введите текст для перевода", reply_markup = markup)
-        bot.register_next_step_handler(msg, next_trans_ni)
+        bot.register_next_step_handler(msg, next_trans_nl)
     elif call.data == 'PL':
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='Выбрать другой язык', callback_data='menu'))
@@ -271,22 +279,31 @@ def query_handler(call):
         bot.register_next_step_handler(msg, next_trans_pt)
     elif call.data == 'menu':
         markup = telebot.types.InlineKeyboardMarkup()
-        markup.add(telebot.types.InlineKeyboardButton(text='RU (Русский)',callback_data='RU'))
-        markup.add(telebot.types.InlineKeyboardButton(text='EN (English)', callback_data='EN'))
-        markup.add(telebot.types.InlineKeyboardButton(text='DE (Deutsch)', callback_data='DE'))
-        markup.add(telebot.types.InlineKeyboardButton(text='UK (Український)', callback_data='UK'))
-        markup.add(telebot.types.InlineKeyboardButton(text='KK (қазақ)', callback_data='KK'))
-        markup.add(telebot.types.InlineKeyboardButton(text='ES (Español)', callback_data='ES'))
-        markup.add(telebot.types.InlineKeyboardButton(text='FR (Français)', callback_data='FR'))
-        markup.add(telebot.types.InlineKeyboardButton(text='IT (Italiano)', callback_data='IT'))
-        markup.add(telebot.types.InlineKeyboardButton(text='NI (Nederlands)', callback_data='NI'))
-        markup.add(telebot.types.InlineKeyboardButton(text='PL (Polski)', callback_data='PL'))
-        markup.add(telebot.types.InlineKeyboardButton(text='PT (Português)', callback_data='PT'))
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='RU (Русский)',callback_data='RU'),
+            telebot.types.InlineKeyboardButton(text='EN (English)', callback_data='EN'),
+            telebot.types.InlineKeyboardButton(text='DE (Deutsch)', callback_data='DE')
+        )
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='UK (Український)', callback_data='UK'),
+            telebot.types.InlineKeyboardButton(text='KK (қазақ)', callback_data='KK')
+        )
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='ES (Español)', callback_data='ES'),
+            telebot.types.InlineKeyboardButton(text='FR (Français)', callback_data='FR'),
+            telebot.types.InlineKeyboardButton(text='IT (Italiano)', callback_data='IT')
+        )
+        markup.row(
+            telebot.types.InlineKeyboardButton(text='NL (Nederlands)', callback_data='NL'),
+            telebot.types.InlineKeyboardButton(text='PL (Polski)', callback_data='PL'),
+            telebot.types.InlineKeyboardButton(text='PT (Português)', callback_data='PT')
+        )
         msg = bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Выбери язык на который хотите перевести текст", reply_markup = markup)
     elif call.data == 'translate':
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='Перевод', callback_data='menu'))
         bot.edit_message_text(chat_id = call.message.chat.id, message_id = call.message.message_id, text = "Вы вернулись в главное меню!", reply_markup = markup)
+
 
 
 
