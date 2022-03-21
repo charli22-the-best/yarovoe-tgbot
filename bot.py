@@ -116,6 +116,7 @@ def next_trans4(message):
         text =  message.text
         lang = 'DE'
         res = translator.translate(text, dest=lang)
+        bot.send_message(message.chat.id, res.text)
 ef next_trans5(message):
     try:
         text = int(message.text)
@@ -124,7 +125,7 @@ ef next_trans5(message):
         text =  message.text
         lang = 'UK'
         res = translator.translate(text, dest=lang)
-        bot.send_message(message.chat.id, res.text)        bot.send_message(message.chat.id, res.text)
+        bot.send_message(message.chat.id, res.text)
 
 
 
