@@ -1,4 +1,3 @@
-from cgitb import html
 import telebot
 from telebot import types
 import requests
@@ -65,11 +64,11 @@ def password_generator(message):
 
 def answer_password_generator(message):
     pas = ''
-    for x in range(int(f"{message.text}")): #Количество символов (16)
+    for x in range(int(f"{message.text}")): #Количество символов
         pas = pas + random.choice(list('+-/*!&$#?=w@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')) #Символы, из которых будет составлен пароль
     bot.send_message(message.chat.id, "Ваш пароль:")
     bot.send_message(message.chat.id, pas)
-    bot.send_message(message.chat.id,  '>НИКОМУ НЕ СООБЩАЙТЕ ЕГО!')
+    bot.send_message(message.chat.id,  'НИКОМУ НЕ СООБЩАЙТЕ ЕГО!')
 
 
 
