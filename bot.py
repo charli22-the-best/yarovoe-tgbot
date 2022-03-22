@@ -8,7 +8,7 @@ from gc import callbacks
 from googletrans import Translator
 import os
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 
 
@@ -51,8 +51,7 @@ def weather(message):
         humidity_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="humidity").text + "\n"
         wind_speed_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="wind").text + "\n"
         long_sun = bs2.find("span", class_="b-weather_days_long").find("span", class_="sunrise").text + "\n" + bs2.find("span", class_="sunset").text
-        
-        testing = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div[1]/div[2]/div[2]/div[5]/div[2]/span')
+        testing = driver.find_element(by=By.XPATH, value="/html/body/div[4]/div[2]/div[1]/div[2]/div[2]/div[5]/div[2]/span")
         bot.send_message(message.chat.id, testing)
         bot.send_message(message.chat.id, "Погода: " + weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
     elif message.chat.type == "group" or message.chat.type == "supergroup":
