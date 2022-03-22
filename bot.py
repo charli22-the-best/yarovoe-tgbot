@@ -9,7 +9,7 @@ from googletrans import Translator
 
 
 
-bot = telebot.TeleBot('5262689983:AAEsqlFzbOt5ewwx9ibGl13lDG-6QxHEbYA')
+bot = telebot.TeleBot('5191273277:AAHyxVdMro_qXDyCAsm5PhL6riQVx7O_eHQ')
 
 
 w = requests.get('https://rp5.ru/Погода_в_Яровом,_Алтайский_край')
