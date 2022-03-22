@@ -9,7 +9,7 @@ from gc import callbacks
 from googletrans import Translator
 import os
 from selenium import webdriver
-from selenium.webdriver.common.by import By, Keys
+from selenium.webdriver.common.by import By
 
 
 
