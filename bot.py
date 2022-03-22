@@ -6,10 +6,22 @@ from bs4 import BeautifulSoup
 import random
 from gc import callbacks
 from googletrans import Translator
+import os
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 
-bot = telebot.TeleBot('5191273277:AAHyxVdMro_qXDyCAsm5PhL6riQVx7O_eHQ')
 
+bot = telebot.TeleBot('5262689983:AAEsqlFzbOt5ewwx9ibGl13lDG-6QxHEbYA')
+
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+driver.get('https://rp5.ru/Погода_в_Яровом,_Алтайский_край')
 
 w = requests.get('https://rp5.ru/Погода_в_Яровом,_Алтайский_край')
 nphw = requests.get('https://prognoz3.ru/россия/алтайский-край/погода-в-яровом/почасовая')
@@ -39,6 +51,9 @@ def weather(message):
         humidity_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="humidity").text + "\n"
         wind_speed_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="wind").text + "\n"
         long_sun = bs2.find("span", class_="b-weather_days_long").find("span", class_="sunrise").text + "\n" + bs2.find("span", class_="sunset").text
+        
+        testing = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div[1]/div[2]/div[2]/div[9]')
+        bot.send_message(message.chat.id, testing)
         bot.send_message(message.chat.id, "Погода: " + weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
     elif message.chat.type == "group" or message.chat.type == "supergroup":
         bot.reply_to(message, 'Поиск данных...')
