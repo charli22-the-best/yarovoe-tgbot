@@ -22,7 +22,7 @@ chrome_options.add_argument("--no-sandbox")
 weather1 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 weather1.get('https://rp5.ru/Погода_в_Яровом,_Алтайский_край')
 weather2 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-weather2.get('https://world-weather.ru/pogoda/russia/yarovoye/')
+weather2.get('https://prognoz3.ru/россия/алтайсикй-край/погода-в-яровом/почасовая')
 
 
 # Начало
@@ -42,19 +42,19 @@ def weather(message):
         bot.send_message(message.chat.id, 'Поиск данных...')
         sleep(1)
         weather_value = 'Погода: ' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[1]').text + ' (' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[2]').text + ')' + '\n'
-        pressure_value = 'Давление: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[2]').text + "\n"
-        humidity_value = 'Влажность: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[3]').text + "\n"
-        wind_speed_value = 'Ветер: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[4]').text + "\n"
-        long_sun = weather2.find_element(By.XPATH, '//*[@id="content-left"]/div[2]/ul').text
+        pressure_value = 'Давление: ' + weather2.find_element(By.XPATH, '//div[@class="b-weather_current scroll-yes"]//div[1]//div[2]//span[6]').text + "\n"
+        humidity_value = 'Влажность: ' + weather2.find_element(By.XPATH, '//div[@class="b-weather_current scroll-yes"]//div[1]//div[2]//span[7]').text + "\n"
+        wind_speed_value = 'Ветер: ' + weather2.find_element(By.XPATH, '//div[@class="b-weather_current scroll-yes"]//div[1]//div[2]//span[8]').text + "\n"
+        long_sun = weather2.find_element(By.XPATH, '//body/div[@class="b-wrapper"]/div[@class="b-content"]/div[@class="b-weather"]/div[@class="b-weather_hourly"]/div[1]/table[1]/caption[1]/span[2]/span[1]').text
         bot.send_message(message.chat.id, weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
     elif message.chat.type == "group" or message.chat.type == "supergroup":
         bot.reply_to(message, 'Поиск данных...')
         sleep(1)
         weather_value = 'Погода: ' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[1]').text + ' (' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[2]').text + ')' + '\n'
-        pressure_value = 'Давление: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[2]').text + "\n"
-        humidity_value = 'Влажность: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[3]').text + "\n"
-        wind_speed_value = 'Ветер: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[4]').text + "\n"
-        long_sun = weather2.find_element(By.XPATH, '//*[@id="content-left"]/div[2]/ul').text
+        pressure_value = 'Давление: ' + weather2.find_element(By.XPATH, '//div[@class="b-weather_current scroll-yes"]//div[1]//div[2]//span[6]').text + "\n"
+        humidity_value = 'Влажность: ' + weather2.find_element(By.XPATH, '//div[@class="b-weather_current scroll-yes"]//div[1]//div[2]//span[7]').text + "\n"
+        wind_speed_value = 'Ветер: ' + weather2.find_element(By.XPATH, '//div[@class="b-weather_current scroll-yes"]//div[1]//div[2]//span[8]').text + "\n"
+        long_sun = weather2.find_element(By.XPATH, '//body/div[@class="b-wrapper"]/div[@class="b-content"]/div[@class="b-weather"]/div[@class="b-weather_hourly"]/div[1]/table[1]/caption[1]/span[2]/span[1]').text
         bot.send_message(message.chat.id, weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
         bot.reply_to(message, weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
 
