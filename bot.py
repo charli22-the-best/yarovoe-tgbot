@@ -6,17 +6,23 @@ from bs4 import BeautifulSoup
 import random
 from gc import callbacks
 from googletrans import Translator
-
+import os
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 
 bot = telebot.TeleBot('5191273277:AAHyxVdMro_qXDyCAsm5PhL6riQVx7O_eHQ')
 
 
-w = requests.get('https://rp5.ru/Погода_в_Яровом,_Алтайский_край')
-nphw = requests.get('https://prognoz3.ru/россия/алтайский-край/погода-в-яровом/почасовая')
-
-bs1 = BeautifulSoup(w.content, "html.parser")
-bs2 = BeautifulSoup(nphw.content, "html.parser")
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
+weather1 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+weather1.get('https://rp5.ru/Погода_в_Яровом,_Алтайский_край')
+weather2 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+weather2.get('https://world-weather.ru/pogoda/russia/yarovoye/')
 
 
 # Начало
@@ -35,21 +41,22 @@ def weather(message):
     if message.chat.type == "private":
         bot.send_message(message.chat.id, 'Поиск данных...')
         sleep(1)
-        weather_value = bs1.find('div', class_='ArchiveTemp').find('span', class_='t_0').text + " (Ощущается как " + bs1.find('div', class_='TempStr').find('span', class_='t_0').text + "), " + bs2.find("div", class_="b-weather_current_additional").find("span", class_="note").text.lower() + "\n"
-        pressure_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="pressure").text + " мм.рт.ст" + "\n"
-        humidity_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="humidity").text + "\n"
-        wind_speed_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="wind").text + "\n"
-        long_sun = bs2.find("span", class_="b-weather_days_long").find("span", class_="sunrise").text + "\n" + bs2.find("span", class_="sunset").text
-        bot.send_message(message.chat.id, "Погода: " + weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
+        weather_value = 'Погода: ' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[1]').text + ' (' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[2]').text + ')' + '\n'
+        pressure_value = 'Давление: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[2]').text + "\n"
+        humidity_value = 'Влажность: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[3]').text + "\n"
+        wind_speed_value = 'Ветер: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[4]').text + "\n"
+        long_sun = weather2.find_element(By.XPATH, '//*[@id="content-left"]/div[2]/ul').text
+        bot.send_message(message.chat.id, weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
     elif message.chat.type == "group" or message.chat.type == "supergroup":
         bot.reply_to(message, 'Поиск данных...')
         sleep(1)
-        weather_value = bs1.find('div', class_='ArchiveTemp').find('span', class_='t_0').text + " (Ощущается как " + bs1.find('div', class_='TempStr').find('span', class_='t_0').text + "), " + bs2.find("div", class_="b-weather_current_additional").find("span", class_="note").text.lower() + "\n"
-        pressure_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="pressure").text + " мм.рт.ст" + "\n"
-        humidity_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="humidity").text + "\n"
-        wind_speed_value = bs2.find('div', class_='b-weather_current_additional').find("span", class_="wind").text + "\n"
-        long_sun = bs2.find("span", class_="b-weather_days_long").find("span", class_="sunrise").text + "\n" + bs2.find("span", class_="sunset").text
-        bot.reply_to(message, "Погода: " + weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
+        weather_value = 'Погода: ' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[1]').text + ' (' + weather1.find_element(By.XPATH, '//*[@id="archiveString"]/div[2]').text + ')' + '\n'
+        pressure_value = 'Давление: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[2]').text + "\n"
+        humidity_value = 'Влажность: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[3]').text + "\n"
+        wind_speed_value = 'Ветер: ' + weather2.find_element(By.XPATH, '//*[@id="weather-now-description"]/dl/dd[4]').text + "\n"
+        long_sun = weather2.find_element(By.XPATH, '//*[@id="content-left"]/div[2]/ul').text
+        bot.send_message(message.chat.id, weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
+        bot.reply_to(message, weather_value + pressure_value + humidity_value + wind_speed_value + long_sun)
 
 
 # Генератор_паролей
